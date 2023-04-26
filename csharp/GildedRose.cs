@@ -6,14 +6,40 @@ namespace csharp
     {
         const int MinQuality = 0;
         const int MaxQuality = 50;
-        const string AgedBrie = "Aged Brie";
-        const string Sulfuras = "Sulfuras, Hand of Ragnaros";
-        const string BackstagePasses = "Backstage passes to a TAFKAL80ETC concert";
-        const string Conjured = "Conjured Mana Cake";
+        enum ItemSpecialCases
+        {
+            None,
+            AgedBrie,
+            Sulfuras, 
+            BackstagePasses, 
+            Conjured
+        }
         IList<Item> Items;
         public GildedRose(IList<Item> Items)
         {
             this.Items = Items;
+        }
+        ItemSpecialCases GetItemName(string name)
+        {
+            switch (name)
+            {
+                case "Aged Brie":
+                    return ItemSpecialCases.AgedBrie;
+                    break;
+                case "Sulfuras, Hand of Ragnaros":
+                    return ItemSpecialCases.Sulfuras;
+                    break;
+                case "Backstage passes to a TAFKAL80ETC concert":
+                    return ItemSpecialCases.BackstagePasses;
+                    break;
+                case "Conjured Mana Cake":
+                    return ItemSpecialCases.Conjured;
+                    break;
+                default:
+                    return ItemSpecialCases.None;
+                    break;
+            }
+
         }
         void UpdateItem(ref Item item, int sellInValueFactor, int qualityValueFactor)
         {
@@ -89,22 +115,23 @@ namespace csharp
         {
             for (int itemIndex = 0; itemIndex < Items.Count; itemIndex++)
             {
-                switch (Items[itemIndex].Name)
+                switch (GetItemName(Items[itemIndex].Name))
                 {
-                    case AgedBrie:
+                    case ItemSpecialCases.AgedBrie:
                         Items[itemIndex] = GetNewAgedBrie(Items[itemIndex]);
                         break;
-                    case Sulfuras:
+                    case ItemSpecialCases.Sulfuras:
                         break;
-                    case BackstagePasses:
+                    case ItemSpecialCases.BackstagePasses:
                         Items[itemIndex] = GetNewBackstagesPasses(Items[itemIndex]);
                         break;
-                    case Conjured:
+                    case ItemSpecialCases.Conjured:
                         Items[itemIndex] = GetNewConjured(Items[itemIndex]);
                         break;
-                    default:
+                    case ItemSpecialCases.None:
                         Items[itemIndex] = GetNewDefault(Items[itemIndex]);
                         break;
+
                 }
             }
         }
